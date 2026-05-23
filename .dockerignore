@@ -1,0 +1,10 @@
+.git
+.github
+.vscode
+.idea
+.codex-gitconfig
+build
+cmake-build-debug
+subconverter
+subconverter.exe
+base/cache

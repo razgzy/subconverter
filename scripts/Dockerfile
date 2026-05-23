@@ -4,10 +4,15 @@ ARG THREADS="4"
 ARG SHA=""
 
 # build minimized
-WORKDIR /
+WORKDIR /src
 RUN set -xe && \
-    apk add --no-cache --virtual .build-tools git g++ build-base linux-headers cmake python3 && \
-    apk add --no-cache --virtual .build-deps curl-dev rapidjson-dev pcre2-dev yaml-cpp-dev && \
+    apk add --no-cache --virtual .build-tools git g++ build-base linux-headers cmake make autoconf automake libtool python3 && \
+    apk add --no-cache --virtual .build-deps openssl-dev zlib-dev rapidjson-dev pcre2-dev yaml-cpp-dev && \
+    git clone https://github.com/curl/curl --depth=1 --branch curl-8_6_0 && \
+    cd curl && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DCURL_USE_OPENSSL=ON -DHTTP_ONLY=ON -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_USE_LIBSSH2=OFF -DBUILD_CURL_EXE=OFF -DCURL_USE_LIBPSL=OFF -DHAVE_LIBIDN2=OFF . && \
+    make install -j $THREADS && \
+    cd .. && \
     git clone https://github.com/ftk/quickjspp --depth=1 && \
     cd quickjspp && \
     git submodule update --init && \
@@ -35,9 +40,12 @@ RUN set -xe && \
     cmake -DCMAKE_CXX_STANDARD=11 . && \
     make install -j $THREADS && \
     cd .. && \
-    git clone https://github.com/tindy2013/subconverter --depth=1 && \
-    cd subconverter && \
-    [ -n "$SHA" ] && sed -i 's/\(v[0-9]\.[0-9]\.[0-9]\)/\1-'"$SHA"'/' src/version.h;\
+    true
+
+WORKDIR /src/subconverter
+COPY . .
+RUN set -xe && \
+    [ -n "$SHA" ] && sed -i 's/\(v[0-9]\.[0-9]\.[0-9]\)/\1-'"$SHA"'/' src/version.h || true; \
     python3 -m ensurepip && \
     python3 -m pip install gitpython && \
     python3 scripts/update_rules.py -c scripts/rules_config.conf && \
@@ -48,10 +56,10 @@ RUN set -xe && \
 FROM alpine:3.16
 LABEL maintainer="tindy.it@gmail.com"
 
-RUN apk add --no-cache --virtual subconverter-deps pcre2 libcurl yaml-cpp
+RUN apk add --no-cache --virtual subconverter-deps ca-certificates pcre2 openssl zlib yaml-cpp
 
-COPY --from=builder /subconverter/subconverter /usr/bin/
-COPY --from=builder /subconverter/base /base/
+COPY --from=builder /src/subconverter/subconverter /usr/bin/
+COPY --from=builder /src/subconverter/base /base/
 
 ENV TZ=Africa/Abidjan
 RUN ln -sf /usr/share/zoneinfo/$TZ /etc/localtime
