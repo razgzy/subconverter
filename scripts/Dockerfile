@@ -6,6 +6,7 @@ ARG SHA=""
 WORKDIR /src/subconverter
 COPY . .
 RUN set -xe && \
+    apk add --no-cache bash && \
     [ -n "$SHA" ] && sed -i 's/\(v[0-9]\.[0-9]\.[0-9]\)/\1-'"$SHA"'/' src/version.h || true; \
     chmod +x scripts/build.alpine.release.sh && \
     bash scripts/build.alpine.release.sh
