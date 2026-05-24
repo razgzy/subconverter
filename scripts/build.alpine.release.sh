@@ -6,7 +6,7 @@ apk add openssl-dev openssl-libs-static zlib-dev rapidjson-dev zlib-static pcre2
 
 git clone https://github.com/curl/curl --depth=1 --branch curl-8_6_0
 cd curl
-cmake -DCURL_USE_OPENSSL=ON -DHTTP_ONLY=ON -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_USE_LIBSSH2=OFF -DBUILD_CURL_EXE=OFF . > /dev/null
+cmake -DCURL_USE_OPENSSL=ON -DHTTP_ONLY=ON -DBUILD_TESTING=OFF -DBUILD_SHARED_LIBS=OFF -DCMAKE_USE_LIBSSH2=OFF -DBUILD_CURL_EXE=OFF -DCURL_USE_LIBPSL=OFF -DHAVE_LIBIDN2=OFF . > /dev/null
 make install -j2 > /dev/null
 cd ..
 
