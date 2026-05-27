@@ -1,8 +1,9 @@
 FROM alpine:3.16 AS builder
-LABEL maintainer="tindy.it@gmail.com"
+LABEL maintainer="metacubex.official@gmail.com"
 ARG THREADS="4"
 ARG SHA=""
 
+# build minimized
 WORKDIR /src
 RUN set -xe && \
     apk add --no-cache --virtual .build-tools git g++ build-base linux-headers cmake make autoconf automake libtool python3 py3-pip ca-certificates && \
@@ -52,7 +53,7 @@ RUN set -xe && \
 
 # build final image
 FROM alpine:3.16
-LABEL maintainer="tindy.it@gmail.com"
+LABEL maintainer="metacubex.official@gmail.com"
 
 RUN apk add --no-cache --virtual subconverter-deps ca-certificates pcre2 openssl zlib yaml-cpp
 

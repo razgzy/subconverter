@@ -54,10 +54,10 @@ jobs:
         include:
           - arch: x86
             artifact: subconverter_darwin64
-            os: macos-26-intel
+            os: macos-15-intel
           - arch: arm
             artifact: subconverter_darwinarm
-            os: macos-26
+            os: macos-latest
     runs-on: ${{ matrix.os }}
     name: macOS ${{ matrix.arch }} Build
     steps:
