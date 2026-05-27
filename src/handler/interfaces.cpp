@@ -330,6 +330,7 @@ std::string subconverter(RESPONSE_CALLBACK_ARGS)
     /// string values
     std::string argUrl = getUrlArg(argument, "url");
     std::string argGroupName = getUrlArg(argument, "group"), argUploadPath = getUrlArg(argument, "upload_path");
+    std::string argClashRuleBase = getUrlArg(argument, "clash_rule_base");
     std::string argIncludeRemark = getUrlArg(argument, "include"), argExcludeRemark = getUrlArg(argument, "exclude");
     std::string argCustomGroups = urlSafeBase64Decode(getUrlArg(argument, "groups")), argCustomRulesets = urlSafeBase64Decode(getUrlArg(argument, "ruleset")), argExternalConfig = getUrlArg(argument, "config");
     std::string argDeviceID = getUrlArg(argument, "dev_id"), argFilename = getUrlArg(argument, "filename"), argUpdateInterval = getUrlArg(argument, "interval"), argUpdateStrict = getUrlArg(argument, "strict");
@@ -505,6 +506,9 @@ std::string subconverter(RESPONSE_CALLBACK_ARGS)
             }
         }
     }
+    if(!argClashRuleBase.empty() && !ext.nodelist && !lSimpleSubscription)
+        checkExternalBase(argClashRuleBase, lClashBase);
+
     if(ext.enable_rule_generator && !ext.nodelist && !lSimpleSubscription)
     {
         if(lCustomRulesets != global.customRulesets)
