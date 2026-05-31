@@ -415,6 +415,7 @@ int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &rulese
 
             retrieved_rules = convertRuleset(retrieved_rules, x.rule_type);
             char delimiter = getLineBreak(retrieved_rules);
+            bool inline_ruleset = x.rule_type != RULESET_CLASH_IPCIDR && x.rule_type != RULESET_CLASH_DOMAIN && x.rule_type != RULESET_CLASH_CLASSICAL && !script && !clash_classical_ruleset;
 
             strStrm.clear();
             strStrm<<retrieved_rules;
@@ -427,6 +428,17 @@ int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &rulese
                     strLine.erase(--lineSize);
                 if(!lineSize || strLine[0] == ';' || strLine[0] == '#' || (lineSize >= 2 && strLine[0] == '/' && strLine[1] == '/')) //empty lines and comments are ignored
                     continue;
+
+                if(inline_ruleset)
+                {
+                    if(startsWith(strLine, "FINAL"))
+                        strLine.replace(0, 5, "MATCH");
+                    strLine += "," + rule_group;
+                    if(count_least(strLine, ',', 3))
+                        strLine = regReplace(strLine, "^(.*?,.*?)(,.*)(,.*)$", "$1$3$2");
+                    rules.emplace_back(strLine);
+                    continue;
+                }
 
                 if(startsWith(strLine, "DOMAIN-KEYWORD,"))
                 {
@@ -465,6 +477,8 @@ int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &rulese
                         has_no_resolve = true;
                 }
             }
+            if(inline_ruleset)
+                continue;
             if(has_domain[rule_name] && !script)
                 rules.emplace_back("RULE-SET," + rule_name + " (Domain)," + rule_group);
             if(has_ipcidr[rule_name] && !script)
