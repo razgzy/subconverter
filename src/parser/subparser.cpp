@@ -30,9 +30,9 @@ void commonConstruct(Proxy &node, ProxyType type, const std::string &group, cons
     node.Type = type;
     node.Group = group;
     node.Remark = remarks;
-    node.Hostname = server;
-    node.UnderlyingProxy = underlying_proxy;
-    node.Port = to_int(port);
+    node.Hostname = trim(server);
+    node.UnderlyingProxy = trim(underlying_proxy);
+    node.Port = to_int(trim(port));
     node.UDP = udp;
     node.TCPFastOpen = tfo;
     node.AllowInsecure = scv;
@@ -47,7 +47,7 @@ void vmessConstruct(Proxy &node, const std::string &group, const std::string &re
     node.EncryptMethod = cipher;
     node.TransferProtocol = net.empty() ? "tcp" : net;
     node.Edge = edge;
-    node.ServerName = sni;
+    node.ServerName = trim(sni);
 
     if(net == "quic")
     {
@@ -105,10 +105,10 @@ void trojanConstruct(Proxy &node, const std::string &group, const std::string &r
 {
     commonConstruct(node, ProxyType::Trojan, group, remarks, server, port, udp, tfo, scv, tls13, underlying_proxy);
     node.Password = password;
-    node.Host = host;
+    node.Host = trim(host);
     node.TLSSecure = tlssecure;
-    node.TransferProtocol = network.empty() ? "tcp" : network;
-    node.Path = path;
+    node.TransferProtocol = network.empty() ? "tcp" : trim(network);
+    node.Path = trim(path);
 }
 
 void snellConstruct(Proxy &node, const std::string &group, const std::string &remarks, const std::string &server, const std::string &port, const std::string &password, const std::string &obfs, const std::string &host, uint16_t version, tribool udp, tribool tfo, tribool scv, const std::string& underlying_proxy)
@@ -116,7 +116,7 @@ void snellConstruct(Proxy &node, const std::string &group, const std::string &re
     commonConstruct(node, ProxyType::Snell, group, remarks, server, port, udp, tfo, scv, tribool(), underlying_proxy);
     node.Password = password;
     node.OBFS = obfs;
-    node.Host = host;
+    node.Host = trim(host);
     node.SnellVersion = version;
 }
 
@@ -197,7 +197,7 @@ void hysteriaConstruct(
     if (!auth.empty())
         node.AuthStr = base64Decode(auth);
     node.OBFS = obfs;
-    node.SNI = sni;
+    node.SNI = trim(sni);
     node.Fingerprint = fingerprint;
     node.Ca = ca;
     node.CaStr = ca_str;
@@ -242,7 +242,7 @@ void hysteria2Construct(
     node.Password = password;
     node.OBFS = obfs;
     node.OBFSParam = obfs_password;
-    node.SNI = sni;
+    node.SNI = trim(sni);
     node.Fingerprint = fingerprint;
     if (!alpn.empty())
     {
@@ -294,7 +294,7 @@ void tuicConstruct(
         node.CongestionController = congestion_controller;
         node.MaxUdpRelayPacketSize = to_int(max_udp_relay_packet_size);
         node.MaxOpenStreams =  to_int(max_open_streams);
-        node.SNI = sni;
+        node.SNI = trim(sni);
         node.FastOpen = tribool(fast_open);
 }
 
@@ -317,7 +317,7 @@ void anytlsConstruct(
 ) {
     commonConstruct(node, ProxyType::AnyTLS, group, remarks, server, port, tribool(), tfo, scv, tribool(), underlying_proxy);
         node.Password = password;
-        node.SNI = sni;
+        node.SNI = trim(sni);
         if (!alpn.empty()) {
             node.Alpn = StringArray{alpn};
         }
@@ -354,18 +354,18 @@ void vlessConstruct(
 ) {
     commonConstruct(node, ProxyType::VLESS, group, remarks, server, port, udp, tfo, scv, tribool(), underlying_proxy);
     node.UUID = uuid;
-    node.SNI = sni;
-    node.TransferProtocol = net.empty() ? "tcp" : net;
+    node.SNI = trim(sni);
+    node.TransferProtocol = net.empty() ? "tcp" : trim(net);
     switch(hash_(net))
     {
         case "grpc"_hash:
-            node.Host = host;
+            node.Host = trim(host);
             node.GRPCMode = mode.empty() ? "gun" : mode;
             if (!path.empty())
                 node.GRPCServiceName = urlEncode(urlDecode(trim(path)));
             break;
         case "quic"_hash:
-            node.QUICSecure = host;
+            node.QUICSecure = trim(host);
             if (!path.empty())
                 node.QUICSecret = trim(path);
             break;
@@ -1778,7 +1778,7 @@ void explodeClash(Node yamlnode, std::vector<Proxy> &nodes)
             node.EchConfig = ech_config;
             node.Certificate = certificate;
             node.PrivateKeyPem = private_key_pem;
-            node.SNI = sni;  // Ensure SNI is set
+            node.SNI = trim(sni);  // Ensure SNI is set
             // max-datagram-frame-size - only assign if explicitly provided
             if(singleproxy["max-datagram-frame-size"].IsDefined())
                 node.MaxDatagramFrameSize = to_int(safe_as<std::string>(singleproxy["max-datagram-frame-size"]));
@@ -2259,8 +2259,8 @@ void parsePeers(Proxy &node, const std::string &data)
             node.PublicKey = val;
             break;
         case "endpoint"_hash:
-            node.Hostname = val.substr(0, val.rfind(':'));
-            node.Port = to_int(val.substr(val.rfind(':') + 1));
+            node.Hostname = trim(val.substr(0, val.rfind(':')));
+            node.Port = to_int(trim(val.substr(val.rfind(':') + 1)));
             break;
         case "client-id"_hash:
             node.ClientId = val;
