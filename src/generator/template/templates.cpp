@@ -37,6 +37,18 @@ static inline void parse_json_pointer(nlohmann::json &json, const std::string &p
     }
 }
 
+static inline bool is_clash_inline_rule_type(const std::string &type)
+{
+    static const char *supported_types[] = {
+        "DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD", "IP-CIDR", "IP-CIDR6",
+        "SRC-IP-CIDR", "GEOIP", "MATCH", "FINAL", "SRC-PORT", "DST-PORT", "PROCESS-NAME"
+    };
+    for(const char *supported_type : supported_types)
+        if(type == supported_type)
+            return true;
+    return false;
+}
+
 /*
 std::string parseHostname(inja::Arguments &args)
 {
@@ -431,6 +443,9 @@ int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &rulese
 
                 if(inline_ruleset)
                 {
+                    std::string rule_type_name = strLine.substr(0, strLine.find(','));
+                    if(!is_clash_inline_rule_type(rule_type_name))
+                        continue;
                     if(startsWith(strLine, "FINAL"))
                         strLine.replace(0, 5, "MATCH");
                     strLine += "," + rule_group;
