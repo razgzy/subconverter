@@ -274,7 +274,10 @@ void refreshRulesets(RulesetConfigs &ruleset_list, std::vector<RulesetContent> &
                 type = iter->second;
             }
             writeLog(0, "Updating ruleset url '" + rule_url + "' with group '" + rule_group + "'.", LOG_LEVEL_INFO);
-            rc = {rule_group, rule_url, rule_url_typed, type, fetchFileAsync(rule_url, proxy, global.cacheRuleset, true, global.asyncFetchRuleset), x.Interval};
+            if(type == RULESET_CLASH_DOMAIN || type == RULESET_CLASH_IPCIDR || type == RULESET_CLASH_CLASSICAL)
+                rc = {rule_group, rule_url, rule_url_typed, type, std::async(std::launch::deferred, [=](){return fetchFile(rule_url, proxy, global.cacheRuleset);}), x.Interval};
+            else
+                rc = {rule_group, rule_url, rule_url_typed, type, fetchFileAsync(rule_url, proxy, global.cacheRuleset, true, global.asyncFetchRuleset), x.Interval};
         }
         ruleset_content_array.emplace_back(std::move(rc));
     }
