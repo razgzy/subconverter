@@ -97,10 +97,12 @@ sniffer:
 {% if local.clash.new_field_name == "true" %}
 proxies: ~
 proxy-groups: ~
+rule-providers: ~
 rules: ~
 {% else %}
 Proxy: ~
 Proxy Group: ~
+Rule Provider: ~
 Rule: ~
 {% endif %}
 

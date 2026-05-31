@@ -28,6 +28,7 @@ dns:
     - '+.lan'
     - '+.local'
     - '+.arpa'
+    - '+.zju.edu.cn'
     - '+.msftconnecttest.com'
     - '+.msftncsi.com'
     - 'www.msftconnecttest.com'
@@ -75,6 +76,8 @@ dns:
     - 'https://dns.alidns.com/dns-query'
     - 'https://doh.pub/dns-query'
   nameserver-policy:
+    +.zju.edu.cn:
+      - 'system'
     geosite:cn:
       - '223.5.5.5'
       - '119.29.29.29'
@@ -97,10 +100,12 @@ sniffer:
 {% if local.clash.new_field_name == "true" %}
 proxies: ~
 proxy-groups: ~
+rule-providers: ~
 rules: ~
 {% else %}
 Proxy: ~
 Proxy Group: ~
+Rule Provider: ~
 Rule: ~
 {% endif %}
 

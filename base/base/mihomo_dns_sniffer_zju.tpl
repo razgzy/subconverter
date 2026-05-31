@@ -6,6 +6,13 @@ allow-lan: {{ default(global.clash.allow_lan, "true") }}
 mode: Rule
 log-level: {{ default(global.clash.log_level, "info") }}
 external-controller: {{ default(global.clash.external_controller, "127.0.0.1:9090") }}
+cfw-bypass:
+  - 'razgzy.dpdns.org'
+  - '*.razgzy.dpdns.org'
+  - 'zgzy.dpdns.org'
+  - '*.zgzy.dpdns.org'
+  - 'jimc.me'
+  - '*.jimc.me'
 dns:
   enable: true
   listen: ':53'
