@@ -511,7 +511,7 @@ int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &rulese
                 base_rule["rule-providers"][yaml_key]["url"] = url.substr(1);
             else
                 base_rule["rule-providers"][yaml_key]["url"] = remote_path_prefix + "/getruleset?type=3&url=" + urlSafeBase64Encode(url);
-            base_rule["rule-providers"][yaml_key]["path"] = "./providers/" + std::to_string(hash_(url)) + "_domain.yaml";
+            base_rule["rule-providers"][yaml_key]["path"] = "./ruleset/" + yaml_key + ".yaml";
             if(!rule_provider_proxy.empty())
                 base_rule["rule-providers"][yaml_key]["proxy"] = rule_provider_proxy;
             if(interval)
@@ -528,7 +528,7 @@ int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &rulese
                 base_rule["rule-providers"][yaml_key]["url"] = url.substr(1);
             else
                 base_rule["rule-providers"][yaml_key]["url"] = remote_path_prefix + "/getruleset?type=4&url=" + urlSafeBase64Encode(url);
-            base_rule["rule-providers"][yaml_key]["path"] = "./providers/" + std::to_string(hash_(url)) + "_ipcidr.yaml";
+            base_rule["rule-providers"][yaml_key]["path"] = "./ruleset/" + yaml_key + ".yaml";
             if(!rule_provider_proxy.empty())
                 base_rule["rule-providers"][yaml_key]["proxy"] = rule_provider_proxy;
             if(interval)
@@ -543,7 +543,7 @@ int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &rulese
                 base_rule["rule-providers"][yaml_key]["url"] = url.substr(1);
             else
                 base_rule["rule-providers"][yaml_key]["url"] = remote_path_prefix + "/getruleset?type=6&url=" + urlSafeBase64Encode(url);
-            base_rule["rule-providers"][yaml_key]["path"] = "./providers/" + std::to_string(hash_(url)) + ".yaml";
+            base_rule["rule-providers"][yaml_key]["path"] = "./ruleset/" + yaml_key + ".yaml";
             if(!rule_provider_proxy.empty())
                 base_rule["rule-providers"][yaml_key]["proxy"] = rule_provider_proxy;
             if(interval)
