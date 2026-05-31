@@ -865,7 +865,7 @@ std::string proxyToClash(std::vector<Proxy> &nodes, const std::string &base_conf
                 yamlnode["mode"] = ext.clash_script ? "Script" : "Rule";
         }
 
-        renderClashScript(yamlnode, ruleset_content_array, ext.managed_config_prefix, ext.clash_script, ext.overwrite_original_rules, ext.clash_classical_ruleset);
+        renderClashScript(yamlnode, ruleset_content_array, ext.managed_config_prefix, ext.clash_script, ext.overwrite_original_rules, ext.clash_classical_ruleset, ext.clash_rule_provider_proxy);
         return YAML::Dump(yamlnode);
     }
 

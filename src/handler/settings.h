@@ -77,6 +77,7 @@ struct ExternalConfig
     ProxyGroupConfigs custom_proxy_group;
     RulesetConfigs surge_ruleset;
     std::string clash_rule_base;
+    std::string clash_rule_provider_proxy;
     std::string surge_rule_base;
     std::string surfboard_rule_base;
     std::string mellow_rule_base;

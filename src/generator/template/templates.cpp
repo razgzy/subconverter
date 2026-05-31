@@ -307,7 +307,7 @@ std::string findFileName(const std::string &path)
     return path.substr(pos + 1, pos2 - pos - 1);
 }
 
-int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &ruleset_content_array, const std::string &remote_path_prefix, bool script, bool overwrite_original_rules, bool clash_classical_ruleset)
+int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &ruleset_content_array, const std::string &remote_path_prefix, bool script, bool overwrite_original_rules, bool clash_classical_ruleset, const std::string &rule_provider_proxy)
 {
     nlohmann::json data;
     std::string match_group, geoips, retrieved_rules;
@@ -498,6 +498,8 @@ int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &rulese
             else
                 base_rule["rule-providers"][yaml_key]["url"] = remote_path_prefix + "/getruleset?type=3&url=" + urlSafeBase64Encode(url);
             base_rule["rule-providers"][yaml_key]["path"] = "./providers/" + std::to_string(hash_(url)) + "_domain.yaml";
+            if(!rule_provider_proxy.empty())
+                base_rule["rule-providers"][yaml_key]["proxy"] = rule_provider_proxy;
             if(interval)
                 base_rule["rule-providers"][yaml_key]["interval"] = interval;
         }
@@ -513,6 +515,8 @@ int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &rulese
             else
                 base_rule["rule-providers"][yaml_key]["url"] = remote_path_prefix + "/getruleset?type=4&url=" + urlSafeBase64Encode(url);
             base_rule["rule-providers"][yaml_key]["path"] = "./providers/" + std::to_string(hash_(url)) + "_ipcidr.yaml";
+            if(!rule_provider_proxy.empty())
+                base_rule["rule-providers"][yaml_key]["proxy"] = rule_provider_proxy;
             if(interval)
                 base_rule["rule-providers"][yaml_key]["interval"] = interval;
         }
@@ -526,6 +530,8 @@ int renderClashScript(YAML::Node &base_rule, std::vector<RulesetContent> &rulese
             else
                 base_rule["rule-providers"][yaml_key]["url"] = remote_path_prefix + "/getruleset?type=6&url=" + urlSafeBase64Encode(url);
             base_rule["rule-providers"][yaml_key]["path"] = "./providers/" + std::to_string(hash_(url)) + ".yaml";
+            if(!rule_provider_proxy.empty())
+                base_rule["rule-providers"][yaml_key]["proxy"] = rule_provider_proxy;
             if(interval)
                 base_rule["rule-providers"][yaml_key]["interval"] = interval;
         }

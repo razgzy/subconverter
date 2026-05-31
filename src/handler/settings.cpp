@@ -1081,6 +1081,7 @@ int loadExternalYAML(YAML::Node &node, ExternalConfig &ext)
     std::string group, strLine;
 
     section["clash_rule_base"] >> ext.clash_rule_base;
+    section["clash_rule_provider_proxy"] >> ext.clash_rule_provider_proxy;
     section["surge_rule_base"] >> ext.surge_rule_base;
     section["surfboard_rule_base"] >> ext.surfboard_rule_base;
     section["mellow_rule_base"] >> ext.mellow_rule_base;
@@ -1156,6 +1157,7 @@ int loadExternalTOML(toml::value &root, ExternalConfig &ext)
                   "enable_rule_generator", ext.enable_rule_generator,
                   "overwrite_original_rules", ext.overwrite_original_rules,
                   "clash_rule_base", ext.clash_rule_base,
+                  "clash_rule_provider_proxy", ext.clash_rule_provider_proxy,
                   "surge_rule_base", ext.surge_rule_base,
                   "surfboard_rule_base", ext.surfboard_rule_base,
                   "mellow_rule_base", ext.mellow_rule_base,
@@ -1258,6 +1260,7 @@ int loadExternalConfig(std::string &path, ExternalConfig &ext)
     }
 
     ini.get_if_exist("clash_rule_base", ext.clash_rule_base);
+    ini.get_if_exist("clash_rule_provider_proxy", ext.clash_rule_provider_proxy);
     ini.get_if_exist("surge_rule_base", ext.surge_rule_base);
     ini.get_if_exist("surfboard_rule_base", ext.surfboard_rule_base);
     ini.get_if_exist("mellow_rule_base", ext.mellow_rule_base);
